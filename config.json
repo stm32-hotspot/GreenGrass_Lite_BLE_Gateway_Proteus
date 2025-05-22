@@ -1,0 +1,8 @@
+{
+    "TARGET_NAME": "BLE_Gateway_Group",
+    "BASE_BUCKET_NAME": "ble-bucket",
+    "REGION": "us-west-2",
+    "VERSION": "1.0.3",
+    "COMPONENT_NAME": "com.example.BleGateway"
+  }
+  
