@@ -260,7 +260,7 @@ To interact with AWS services from the terminal, you need to have the AWS CLI in
       ##### **Parameter Descriptions**
       | **Key**              | **Description** |
       |----------------------|---------------|
-      | `TARGET_NAME`       | The name of the AWS IoT Thing or Group that will receive the Greengrass deployment. Example: `"MyGreengrassDevice"` or `"MyGreengrassGroup"`. |
+      | `GROUP_NAME`       | The name of the AWS IoT Group that will receive the Greengrass deployment. Example: `"MyGreengrassGroup"` or `"MyGreengrassGroup"`. |
       | `BASE_BUCKET_NAME`   | The base name for the AWS S3 bucket where artifacts will be stored. Your AWS account ID will be appended to this name automatically. |
       | `REGION`            | The AWS region where your resources (S3 bucket, Greengrass component, IoT Thing) are located. Example: `"us-west-2"`. |
       | `VERSION`          | The version number of the component. This should match the version of your deployment. Example: `"1.0.0"`. |
@@ -269,7 +269,7 @@ To interact with AWS services from the terminal, you need to have the AWS CLI in
       ##### **Example `config.json` File**
       ```json
       {
-         "TARGET_NAME": "MyGreengrassDevice",
+         "TARGET_GROUP": "MyGreengrassGroup",
          "BASE_BUCKET_NAME": "ble-gateway",
          "REGION": "us-west-2",
          "VERSION": "1.0.0",
@@ -280,7 +280,7 @@ To interact with AWS services from the terminal, you need to have the AWS CLI in
 
       >##### **Notes:**
       >- Ensure that **`BASE_BUCKET_NAME`** is unique across AWS (your account ID helps with this).  
-      >- The **`TARGET_NAME`** should match an existing AWS IoT Thing **OR** Group Name.
+      >- The **`TARGET_GROUP`** should match an existing AWS IoT Group Name.
       >- **Creating New Versions or Modifying Artifacts:**  
       >     - If you create a new version or modify artifacts (e.g., `BleGateway.py`, `install.sh`), place them in a directory corresponding to the new version.  
       >     - The script expects artifacts to be in:  

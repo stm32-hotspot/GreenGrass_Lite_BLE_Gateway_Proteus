@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
 # Load configuration from config.json
 CONFIG_FILE="config.json"
 
@@ -16,12 +19,12 @@ BASE_BUCKET_NAME=$(get_config_value "BASE_BUCKET_NAME")
 REGION=$(get_config_value "REGION")
 COMPONENT_NAME=$(get_config_value "COMPONENT_NAME")
 VERSION=$(get_config_value "VERSION")
-TARGET_NAME=$(get_config_value "TARGET_NAME")
+TARGET_GROUP=$(get_config_value "TARGET_GROUP")
 ARTIFACTS_PATH="./BleGatewayComponent/artifacts/$COMPONENT_NAME/$VERSION"
 RECIPES_PATH="./BleGatewayComponent/recipes"
 
 # Echo configuration
-echo -e "Target Name:\t$TARGET_NAME"
+echo -e "Target Group:\t$TARGET_GROUP"
 echo -e "Bucket Name:\t$BASE_BUCKET_NAME"
 echo -e "AWS Region:\t$REGION"
 echo -e "Version:\t$VERSION"
@@ -40,6 +43,11 @@ else
   aws s3api create-bucket --bucket "$BUCKET_NAME" --region "$REGION" \
     --create-bucket-configuration LocationConstraint="$REGION"
 fi
+
+#Confirm Line Endings are Unix Style
+sed -i 's/\r$//' "$ARTIFACTS_PATH/BleGateway.py"
+sed -i 's/\r$//' "$ARTIFACTS_PATH/install.sh"
+
 
 # Upload files to S3
 echo "Uploading artifacts to S3..."
@@ -72,15 +80,12 @@ aws greengrassv2 create-component-version \
 # Deploy the component
 echo "Deploying the component to the Greengrass target..."
 
-# Check if the TARGET_NAME corresponds to a Thing or a Thing Group
-if aws iot describe-thing --thing-name "$TARGET_NAME" >/dev/null 2>&1; then
-    # If it’s a Thing, use the Thing ARN
-    TARGET_ARN="arn:aws:iot:$REGION:$ACCOUNT_ID:thing/$TARGET_NAME"
-elif aws iot describe-thing-group --thing-group-name "$TARGET_NAME" >/dev/null 2>&1; then
+# Check if the TARGET_GROUP corresponds to a Thing Group
+if aws iot describe-thing-group --thing-group-name "$TARGET_GROUP" >/dev/null 2>&1; then
     # If it’s a Thing Group, use the Thing Group ARN
-    TARGET_ARN="arn:aws:iot:$REGION:$ACCOUNT_ID:thinggroup/$TARGET_NAME"
+    TARGET_ARN="arn:aws:iot:$REGION:$ACCOUNT_ID:thinggroup/$TARGET_GROUP"
 else
-    echo "Error: TARGET_NAME is neither a valid Thing nor a Thing Group."
+    echo "Error: TARGET_GROUP is not a valid Thing Group."
     exit 1
 fi
 

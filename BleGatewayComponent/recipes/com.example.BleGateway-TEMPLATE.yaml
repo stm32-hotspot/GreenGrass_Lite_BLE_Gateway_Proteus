@@ -13,10 +13,11 @@ Manifests:
       - URI: s3://{{BUCKET_NAME}}/{{COMPONENT_NAME}}/{{VERSION}}/BleGateway.py
       - URI: s3://{{BUCKET_NAME}}/{{COMPONENT_NAME}}/{{VERSION}}/install.sh
     Lifecycle:
-      Install:
+      install:
+        Timeout: 1200
         Script: 
-          "bash {artifacts:path}/install.sh"
+          "bash {artifacts:path}install.sh"
       run:
         RequiresPrivilege: false
         Script:
-          "python3  {artifacts:path}/BleGateway.py"
+          "python3  {artifacts:path}BleGateway.py"
